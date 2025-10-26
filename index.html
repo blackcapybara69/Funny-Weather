@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Funny Weather</title>
+<title>Funny Weather 🌦️</title>
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -48,29 +48,30 @@ h2 { margin-bottom: 20px; }
 </div>
 
 <script>
-const API_KEY = "YOUR_API_KEY_HERE"; // replace with your OpenWeatherMap API key
+const API_KEY = "0e2ecc5e71a7467f8c0589d79b283f02"; // your Weatherbit key
 
 function getWeather() {
   const city = document.getElementById("city").value.trim();
   if(!city) return alert("Enter a city!");
 
-  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`)
+  fetch(`https://api.weatherbit.io/v2.0/current?city=${city}&key=${API_KEY}&units=M`)
     .then(res => res.json())
     .then(data => {
-      if(data.cod !== 200) {
+      if(!data.data || data.data.length === 0) {
         document.getElementById("result").textContent = "City not found 😅";
         return;
       }
 
-      const temp = data.main.temp;
-      const desc = data.weather[0].main;
-      let funnyMsg = "";
+      const weather = data.data[0];
+      const temp = weather.temp;
+      const desc = weather.weather.description;
 
-      // funny messages based on weather
-      if(desc.includes("Rain")) funnyMsg = "Bring an umbrella or a boat 🛶";
-      else if(desc.includes("Clear")) funnyMsg = "Sunny vibes! Wear sunglasses 😎";
-      else if(desc.includes("Cloud")) funnyMsg = "Cloudy… or just mood lighting ☁️";
-      else if(desc.includes("Snow")) funnyMsg = "Time for snowball fights ❄️";
+      let funnyMsg = "";
+      const descLower = desc.toLowerCase();
+      if(descLower.includes("rain")) funnyMsg = "Bring an umbrella or a boat 🛶";
+      else if(descLower.includes("clear")) funnyMsg = "Sunny vibes! Wear sunglasses 😎";
+      else if(descLower.includes("cloud")) funnyMsg = "Cloudy… or just mood lighting ☁️";
+      else if(descLower.includes("snow")) funnyMsg = "Time for snowball fights ❄️";
       else funnyMsg = "Weather doing its thing 🌈";
 
       document.getElementById("result").innerHTML =
@@ -84,4 +85,6 @@ function getWeather() {
 </script>
 
 </body>
+</html>
+
 </html>
