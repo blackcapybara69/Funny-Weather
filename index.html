@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Funny Weather</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#a8edea,#fed6e3);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 360px;
+  text-align: center;
+}
+input, button {
+  padding: 10px;
+  width: 80%;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #111827;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+h2 { margin-bottom: 20px; }
+#result { margin-top: 15px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Funny Weather 🌦️</h2>
+  <input type="text" id="city" placeholder="Enter city">
+  <button onclick="getWeather()">Check Weather</button>
+  <div id="result"></div>
+</div>
+
+<script>
+const API_KEY = "YOUR_API_KEY_HERE"; // replace with your OpenWeatherMap API key
+
+function getWeather() {
+  const city = document.getElementById("city").value.trim();
+  if(!city) return alert("Enter a city!");
+
+  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`)
+    .then(res => res.json())
+    .then(data => {
+      if(data.cod !== 200) {
+        document.getElementById("result").textContent = "City not found 😅";
+        return;
+      }
+
+      const temp = data.main.temp;
+      const desc = data.weather[0].main;
+      let funnyMsg = "";
+
+      // funny messages based on weather
+      if(desc.includes("Rain")) funnyMsg = "Bring an umbrella or a boat 🛶";
+      else if(desc.includes("Clear")) funnyMsg = "Sunny vibes! Wear sunglasses 😎";
+      else if(desc.includes("Cloud")) funnyMsg = "Cloudy… or just mood lighting ☁️";
+      else if(desc.includes("Snow")) funnyMsg = "Time for snowball fights ❄️";
+      else funnyMsg = "Weather doing its thing 🌈";
+
+      document.getElementById("result").innerHTML =
+        `It’s ${temp}°C in ${city}. ${funnyMsg}`;
+    })
+    .catch(err => {
+      document.getElementById("result").textContent = "Error fetching weather 😭";
+      console.error(err);
+    });
+}
+</script>
+
+</body>
+</html>
